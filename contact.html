@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — I.N. Descartes</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="brand" href="index.html">I.N. Descartes</a>
+  <div class="socials">
+    <ul>
+      <li><a href="about.html">About</a></li>
+      <li><a href="novels.html">Novels</a></li>
+      <li><a href="diary.html">Diary</a></li>
+      <li><a href="contact.html" aria-current="page">Contact</a></li>
+    </ul>
+    <a class="instagram" href="https://www.instagram.com/imani_thee_writer/" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg>
+    </a>
+  </div>
+</nav>
+
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track">
+    The Descartes Library <span>𓇢𓆸</span>
+    The Descartes Library <span>𓇢𓆸</span>
+    The Descartes Library <span>𓇢𓆸</span>
+    The Descartes Library <span>𓇢𓆸</span>
+  </div>
+</div>
+
+<main>
+  <h1 class="page-title fade-in">Contact me</h1>
+  <p class="lede fade-in">For inquiries about bookish events or press opportunities, please feel free to reach out here.</p>
+
+  <form class="contact fade-in" id="contact-form">
+    <div class="field-row">
+      <div>
+        <label for="first-name">First name (required)</label>
+        <input type="text" id="first-name" name="first_name" required>
+      </div>
+      <div>
+        <label for="last-name">Last name (required)</label>
+        <input type="text" id="last-name" name="last_name" required>
+      </div>
+    </div>
+
+    <div>
+      <label for="email">Email (required)</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+
+    <div>
+      <label for="subject">Subject (required)</label>
+      <input type="text" id="subject" name="subject" required>
+    </div>
+
+    <div>
+      <label for="inquiring-about">Inquiring about</label>
+      <select id="inquiring-about" name="inquiring_about">
+        <option value="">Select one</option>
+        <option value="services">Services</option>
+        <option value="corporate-events">Corporate events</option>
+        <option value="group-events">Group events</option>
+        <option value="press">Press opportunity</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="message">Message (required)</label>
+      <textarea id="message" name="message" required></textarea>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <p class="footer-note" style="margin-top:2rem;">Hitting submit opens your visitor's own email app with everything filled in, addressed to <a href="mailto:author.indescartes@gmail.com">author.indescartes@gmail.com</a> — it works with zero setup, but it depends on the visitor having a mail app configured, and nothing gets saved into Google Drive automatically. If you want messages landing straight in a Sheet in your Drive with no extra tools, the cleanest swap is a <a href="https://www.google.com/forms/about/" target="_blank" rel="noopener">Google Form</a> in place of this one — every response saves to Drive on its own, and I'm happy to help you set that up and restyle it to match.</p>
+
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var first = document.getElementById('first-name').value;
+      var last = document.getElementById('last-name').value;
+      var email = document.getElementById('email').value;
+      var subject = document.getElementById('subject').value;
+      var about = document.getElementById('inquiring-about').value;
+      var message = document.getElementById('message').value;
+
+      var body = 'From: ' + first + ' ' + last + ' (' + email + ')\n' +
+                 (about ? 'Inquiring about: ' + about + '\n' : '') +
+                 '\n' + message;
+
+      var mailto = 'mailto:author.indescartes@gmail.com' +
+                   '?subject=' + encodeURIComponent(subject) +
+                   '&body=' + encodeURIComponent(body);
+
+      window.location.href = mailto;
+    });
+  </script>
+</main>
+
+<footer>
+  <div class="ticker-wrap footer-ticker" aria-hidden="true">
+    <div class="ticker-track">
+      join the library <span>𓇢𓆸</span>
+      join the library <span>𓇢𓆸</span>
+      join the library <span>𓇢𓆸</span>
+      join the library <span>𓇢𓆸</span>
+    </div>
+  </div>
+  <div class="footer-body">
+  <p>never miss an update</p>
+  <form class="signup" action="#" method="post">
+    <label class="visually-hidden" for="signup-email">Email address</label>
+    <input type="email" id="signup-email" name="email" placeholder="your email" required>
+    <button type="submit">Sign up</button>
+  </form>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<img class="corner-decor bottom-left" src="assets/branch-blossom.webp" alt="" aria-hidden="true">
+<img class="corner-decor bottom-right" src="assets/water-lily.webp" alt="" aria-hidden="true">
+</body>
+</html>
