@@ -143,10 +143,13 @@ a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
 /* ---------- Layout ---------- */
 /* ---------- Decorative accents ---------- */
 .scallop-divider {
-  height: 22px;
-  background-image: radial-gradient(circle at 12px 0, transparent 12px, var(--cream) 13px);
-  background-size: 24px 24px;
-  background-repeat: repeat-x;
+  height: 56px;
+  background-image:
+    radial-gradient(circle at 14px 0, var(--green) 15px, transparent 16px),
+    url("assets/fabric-texture.jpg");
+  background-size: 28px 56px, 220px 220px;
+  background-repeat: repeat-x, repeat;
+  background-blend-mode: normal, multiply;
   background-color: var(--burgundy);
 }
 
@@ -168,12 +171,26 @@ a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 3.5rem 0 0.5rem;
-  opacity: 0.92;
+  gap: 1.5rem;
+  margin: 4rem 0 1rem;
 }
-.specimen-accent svg { display: block; width: 220px; height: auto; }
-@media (max-width: 480px) {
-  .specimen-accent svg { width: 175px; }
+.specimen-accent img {
+  display: block;
+  width: 220px;
+  height: auto;
+}
+.specimen-accent .specimen-label {
+  font-family: 'Bodoni Moda', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--burgundy);
+  border-top: 1px solid var(--pink);
+  padding-top: 0.6rem;
+  min-width: 140px;
+}
+@media (max-width: 560px) {
+  .specimen-accent { flex-direction: column; gap: 0.75rem; }
+  .specimen-accent img { width: 170px; }
   .page-flourish svg { width: 130px; }
 }
 
