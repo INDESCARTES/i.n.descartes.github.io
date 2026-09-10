@@ -471,7 +471,7 @@ button:active, .btn:active {
     background: transparent;
     font-family: 'Inter', Helvetica, Arial, sans-serif;
     position:relative;
-    overflow:hidden;
+    overflow:visible;
   }
 
   .stage-wrapper-thick *{ box-sizing:border-box; }
@@ -612,19 +612,6 @@ button:active, .btn:active {
   }
 
   .stage-wrapper-mini *{ box-sizing:border-box; }
-
-  .stage-wrapper-mini .arch-glow{
-    position:absolute;
-    top:50%;
-    left:50%;
-    width:380px;
-    height:380px;
-    transform: translate(-50%, -46%);
-    background: radial-gradient(circle at 50% 38%, rgba(255,248,214,0.42) 0%, rgba(112,235,30,0.22) 40%, rgba(255,251,241,0) 68%);
-    border-radius: 50% 50% 45% 45%;
-    pointer-events:none;
-    z-index:0;
-  }
 
   .stage-wrapper-mini .th-stage{
     position:relative;
