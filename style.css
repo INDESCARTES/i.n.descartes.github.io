@@ -146,26 +146,25 @@ a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
   height: 56px;
   background-image:
     radial-gradient(circle at 14px 0, var(--green) 15px, transparent 16px),
-    url("assets/fabric-texture.jpg");
+    url("assets/paper-grain.jpg");
   background-size: 28px 56px, 220px 220px;
   background-repeat: repeat-x, repeat;
   background-blend-mode: normal, multiply;
   background-color: var(--burgundy);
 }
 
-.page-flourish {
-  display: flex;
-  justify-content: center;
-  margin: 0 0 1.75rem;
-}
-.page-flourish svg { display: block; width: 160px; height: auto; }
-
 .ring-divider {
   display: flex;
   justify-content: center;
   margin: 3.5rem 0;
 }
-.ring-divider svg { display: block; width: 100%; max-width: 420px; height: auto; }
+.ring-divider img {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  opacity: 0.9;
+}
 
 .specimen-accent {
   display: flex;
@@ -191,7 +190,6 @@ a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
 @media (max-width: 560px) {
   .specimen-accent { flex-direction: column; gap: 0.75rem; }
   .specimen-accent img { width: 170px; }
-  .page-flourish svg { width: 130px; }
 }
 
 main {
