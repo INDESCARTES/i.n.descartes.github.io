@@ -109,14 +109,20 @@ a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
 }
 
 .ticker-track {
-  display: inline-block;
-  padding-left: 100%;
+  display: flex;
+  width: max-content;
   animation: scroll-left 32s linear infinite;
   font-family: 'Bodoni Moda', serif;
   font-weight: 700;
   font-style: italic;
   font-size: 1.5rem;
   letter-spacing: 0.03em;
+}
+
+.ticker-seq {
+  display: flex;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .ticker-track span {
@@ -126,14 +132,51 @@ a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
 
 @keyframes scroll-left {
   from { transform: translateX(0); }
-  to   { transform: translateX(-100%); }
+  to   { transform: translateX(-50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ticker-track { animation: none; padding-left: 1.5rem; }
+  .ticker-track { animation: none; }
+  .ticker-seq[aria-hidden="true"] { display: none; }
 }
 
 /* ---------- Layout ---------- */
+/* ---------- Decorative accents ---------- */
+.scallop-divider {
+  height: 22px;
+  background-image: radial-gradient(circle at 12px 0, transparent 12px, var(--cream) 13px);
+  background-size: 24px 24px;
+  background-repeat: repeat-x;
+  background-color: var(--burgundy);
+}
+
+.page-flourish {
+  display: flex;
+  justify-content: center;
+  margin: 0 0 1.75rem;
+}
+.page-flourish svg { display: block; width: 160px; height: auto; }
+
+.ring-divider {
+  display: flex;
+  justify-content: center;
+  margin: 3.5rem 0;
+}
+.ring-divider svg { display: block; width: 100%; max-width: 420px; height: auto; }
+
+.specimen-accent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 3.5rem 0 0.5rem;
+  opacity: 0.92;
+}
+.specimen-accent svg { display: block; width: 220px; height: auto; }
+@media (max-width: 480px) {
+  .specimen-accent svg { width: 175px; }
+  .page-flourish svg { width: 130px; }
+}
+
 main {
   max-width: 800px;
   margin: 0 auto;
