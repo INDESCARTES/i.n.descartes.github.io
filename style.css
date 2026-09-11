@@ -21,7 +21,9 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  background: var(--cream);
+  background-color: var(--cream);
+  background-image: url("assets/wallpaper.png");
+  background-repeat: repeat;
   color: var(--ink);
   font-family: 'EB Garamond', serif;
   font-size: 21px;
@@ -164,32 +166,6 @@ a:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
   max-width: 460px;
   height: auto;
   opacity: 0.9;
-}
-
-.specimen-accent {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-  margin: 4rem 0 1rem;
-}
-.specimen-accent img {
-  display: block;
-  width: 220px;
-  height: auto;
-}
-.specimen-accent .specimen-label {
-  font-family: 'Bodoni Moda', serif;
-  font-style: italic;
-  font-size: 1.05rem;
-  color: var(--burgundy);
-  border-top: 1px solid var(--pink);
-  padding-top: 0.6rem;
-  min-width: 140px;
-}
-@media (max-width: 560px) {
-  .specimen-accent { flex-direction: column; gap: 0.75rem; }
-  .specimen-accent img { width: 170px; }
 }
 
 main {
