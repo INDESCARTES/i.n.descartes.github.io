@@ -28,13 +28,23 @@ window.initFadeIn = initFadeIn;
 document.addEventListener('DOMContentLoaded', function () {
   initFadeIn();
 
-  // ---------- Shelf book: click to pull forward and inspect ----------
-  var shelfBook = document.getElementById('shelfBook');
+  // ---------- Shelf books: click any book to pull it forward and inspect ----------
+  var shelfBooks = document.querySelectorAll('.shelf-book');
   var overlay = document.getElementById('bookFocusOverlay');
   var closeBtn = document.getElementById('bookFocusClose');
+  var focusStage = document.getElementById('bookFocusStage');
+  var focusTitle = document.getElementById('bookFocusTitle');
+  var focusSummary = document.getElementById('bookFocusSummary');
+  var lastActiveBook = null;
 
-  if (shelfBook && overlay) {
-    var openOverlay = function () {
+  if (shelfBooks.length && overlay) {
+    var openOverlay = function (book) {
+      lastActiveBook = book;
+      if (focusTitle) focusTitle.textContent = book.getAttribute('data-title') || '';
+      if (focusSummary) focusSummary.textContent = book.getAttribute('data-summary') || '';
+      if (focusStage) {
+        focusStage.classList.toggle('book-placeholder', book.classList.contains('book-placeholder'));
+      }
       overlay.classList.add('is-open');
       overlay.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
@@ -44,16 +54,19 @@ document.addEventListener('DOMContentLoaded', function () {
       overlay.classList.remove('is-open');
       overlay.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
-      shelfBook.focus();
+      if (lastActiveBook) lastActiveBook.focus();
     };
 
-    shelfBook.addEventListener('click', openOverlay);
-    shelfBook.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        openOverlay();
-      }
+    shelfBooks.forEach(function (book) {
+      book.addEventListener('click', function () { openOverlay(book); });
+      book.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openOverlay(book);
+        }
+      });
     });
+
     if (closeBtn) closeBtn.addEventListener('click', closeOverlay);
     overlay.addEventListener('click', function (e) {
       if (e.target === overlay) closeOverlay();

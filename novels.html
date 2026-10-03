@@ -47,8 +47,13 @@
   <h1 class="page-title fade-in">Novels</h1>
 
   <section class="fade-in">
-    <div class="shelf-display" id="shelfBook" role="button" tabindex="0" aria-label="Pick up Tuft Hunter to take a closer look">
-      <div class="shelf-book stage-wrapper-v3-mini" style="--book-w:105px; --book-h:166px; --book-d:36px; min-height:0;">
+    <div class="shelf-display">
+      <div class="shelf-book stage-wrapper-v3-mini"
+           role="button" tabindex="0"
+           aria-label="Pick up Tuft Hunter to take a closer look"
+           data-title="tuft hunter"
+           data-summary="Agatha Aldridge is a micro influencer living out her dark academia dreams by enrolling as a freshman at Boston University. At orientation, she meets Portia Montgomery — Boston royalty, old money, and a streamer with over a million followers."
+           style="left:40%; --book-w:100px; --book-h:150px; --book-d:30px; min-height:0;">
         <div class="th-stage">
           <div class="scene-wrap">
             <div class="scene">
@@ -63,21 +68,37 @@
           </div>
         </div>
       </div>
-      <span class="shelf-hint">tap to pick up</span>
+
+      <div class="shelf-book book-placeholder stage-wrapper-v3-mini"
+           role="button" tabindex="0"
+           aria-label="Pick up the unknown book to take a closer look"
+           data-title="unknown"
+           data-summary="Small town slasher"
+           style="left:63%; --book-w:100px; --book-h:150px; --book-d:30px; min-height:0;">
+        <div class="th-stage">
+          <div class="scene-wrap">
+            <div class="scene">
+              <div class="book">
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face spine"></div>
+                <div class="face pages"></div>
+              </div>
+            </div>
+            <div class="ground-shadow"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="novel-details">
-      <h2>tuft hunter</h2>
-      <p>Agatha Aldridge is a micro influencer living out her dark academia dreams by enrolling as a freshman at Boston University. At orientation, she meets Portia Montgomery — Boston royalty, old money, and a streamer with over a million followers.</p>
-      <span class="status">Coming soon</span>
-    </div>
+    <p class="shelf-prompt">Browse the Descartes library. Choose a book.</p>
   </section>
 </main>
 
 <div class="book-focus-overlay" id="bookFocusOverlay" aria-hidden="true">
   <div class="book-focus-inner">
     <button class="book-focus-close" id="bookFocusClose" aria-label="Put the book back">&times;</button>
-    <div class="stage-wrapper-v3-thick">
+    <div class="stage-wrapper-v3-thick" id="bookFocusStage">
       <div class="arch-glow"></div>
       <div class="th-stage">
         <div class="scene-wrap">
@@ -93,7 +114,11 @@
         </div>
       </div>
     </div>
-    <span class="book-focus-title">tuft hunter — coming soon</span>
+    <div class="book-focus-text">
+      <span class="book-focus-title" id="bookFocusTitle"></span>
+      <p class="book-focus-summary" id="bookFocusSummary"></p>
+      <span class="status">Coming soon</span>
+    </div>
   </div>
 </div>
 
