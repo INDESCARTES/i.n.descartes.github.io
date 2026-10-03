@@ -3,8 +3,8 @@
 
    IMPORTANT: update these two values if your GitHub username or repo name
    are different from what's set here. */
-const DIARY_REPO_OWNER = "indescartes";
-const DIARY_REPO_NAME = "indescartes.github.io";
+const DIARY_REPO_OWNER = "INDESCARTES";
+const DIARY_REPO_NAME = "i.n.descartes.github.io";
 const DIARY_BRANCH = "main";
 
 (function () {
