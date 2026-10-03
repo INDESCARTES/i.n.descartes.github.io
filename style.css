@@ -515,10 +515,10 @@ button:active, .btn:active {
     position:absolute;
     top:50%;
     left:50%;
-    width:640px;
-    height:640px;
-    transform: translate(-50%, -46%);
-    background: radial-gradient(circle at 50% 38%, rgba(255,214,196,0.36) 0%, rgba(204,44,33,0.22) 40%, rgba(255,251,241,0) 68%);
+    width:520px;
+    height:520px;
+    transform: translate(-50%, -38%);
+    background: radial-gradient(circle at 50% 38%, rgba(214,174,132,0.26) 0%, rgba(90,58,32,0.20) 42%, rgba(255,251,241,0) 68%);
     border-radius: 50% 50% 45% 45%;
     pointer-events:none;
     z-index:0;
@@ -774,16 +774,17 @@ button:active, .btn:active {
   margin: 0 auto 2.5rem;
   border-radius: 4px;
   overflow: hidden;
+  container-type: inline-size;
   background-image: url("assets/bookshelf.jpg");
   background-size: cover;
   background-position: center;
-  box-shadow: 8px 8px 0 var(--pink);
+  box-shadow: 0 16px 30px rgba(23, 20, 15, 0.45);
 }
 
 .shelf-book {
   position: absolute;
   left: 50%;
-  bottom: 43%;
+  bottom: 81%;
   transform: translateX(-50%);
   transition: transform 0.2s ease, filter 0.2s ease;
   cursor: url('https://cdn.cursors-4u.net/previews/flower-62-f74da4a0-32.webp') 32 32, pointer;
