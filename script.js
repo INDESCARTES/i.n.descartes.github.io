@@ -1,8 +1,11 @@
-document.addEventListener('DOMContentLoaded', function () {
-  var targets = document.querySelectorAll('.fade-in');
+function initFadeIn() {
+  var targets = document.querySelectorAll('.fade-in:not([data-fade-bound])');
 
-  if (!('IntersectionObserver' in window) || targets.length === 0) {
-    targets.forEach(function (el) { el.classList.add('is-visible'); });
+  if (!('IntersectionObserver' in window)) {
+    targets.forEach(function (el) {
+      el.classList.add('is-visible');
+      el.setAttribute('data-fade-bound', '1');
+    });
     return;
   }
 
@@ -15,7 +18,50 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
-  targets.forEach(function (el) { observer.observe(el); });
+  targets.forEach(function (el) {
+    el.setAttribute('data-fade-bound', '1');
+    observer.observe(el);
+  });
+}
+window.initFadeIn = initFadeIn;
+
+document.addEventListener('DOMContentLoaded', function () {
+  initFadeIn();
+
+  // ---------- Shelf book: click to pull forward and inspect ----------
+  var shelfBook = document.getElementById('shelfBook');
+  var overlay = document.getElementById('bookFocusOverlay');
+  var closeBtn = document.getElementById('bookFocusClose');
+
+  if (shelfBook && overlay) {
+    var openOverlay = function () {
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      if (closeBtn) closeBtn.focus();
+    };
+    var closeOverlay = function () {
+      overlay.classList.remove('is-open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      shelfBook.focus();
+    };
+
+    shelfBook.addEventListener('click', openOverlay);
+    shelfBook.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openOverlay();
+      }
+    });
+    if (closeBtn) closeBtn.addEventListener('click', closeOverlay);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) closeOverlay();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeOverlay();
+    });
+  }
 
   // ---------- Button press glitter/star burst ----------
   var prefersReducedMotion = window.matchMedia &&

@@ -46,8 +46,39 @@
 <main>
   <h1 class="page-title fade-in">Novels</h1>
 
-  <section class="novel fade-in">
-    <div class="stage-wrapper-mini">
+  <section class="fade-in">
+    <div class="shelf-display" id="shelfBook" role="button" tabindex="0" aria-label="Pick up Tuft Hunter to take a closer look">
+      <div class="shelf-book stage-wrapper-v3-mini" style="--book-w:105px; --book-h:166px; --book-d:36px; min-height:0;">
+        <div class="th-stage">
+          <div class="scene-wrap">
+            <div class="scene">
+              <div class="book">
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face spine"></div>
+                <div class="face pages"></div>
+              </div>
+            </div>
+            <div class="ground-shadow"></div>
+          </div>
+        </div>
+      </div>
+      <span class="shelf-hint">tap to pick up</span>
+    </div>
+
+    <div class="novel-details">
+      <h2>tuft hunter</h2>
+      <p>Agatha Aldridge is a micro influencer living out her dark academia dreams by enrolling as a freshman at Boston University. At orientation, she meets Portia Montgomery — Boston royalty, old money, and a streamer with over a million followers.</p>
+      <span class="status">Coming soon</span>
+    </div>
+  </section>
+</main>
+
+<div class="book-focus-overlay" id="bookFocusOverlay" aria-hidden="true">
+  <div class="book-focus-inner">
+    <button class="book-focus-close" id="bookFocusClose" aria-label="Put the book back">&times;</button>
+    <div class="stage-wrapper-v3-thick">
+      <div class="arch-glow"></div>
       <div class="th-stage">
         <div class="scene-wrap">
           <div class="scene">
@@ -62,13 +93,9 @@
         </div>
       </div>
     </div>
-    <div>
-      <h2>tuft hunter</h2>
-      <p>Agatha Aldridge is a micro influencer living out her dark academia dreams by enrolling as a freshman at Boston University. At orientation, she meets Portia Montgomery — Boston royalty, old money, and a streamer with over a million followers.</p>
-      <span class="status">Coming soon</span>
-    </div>
-  </section>
-</main>
+    <span class="book-focus-title">tuft hunter — coming soon</span>
+  </div>
+</div>
 
 <footer>
   <div class="ticker-wrap footer-ticker" aria-hidden="true">

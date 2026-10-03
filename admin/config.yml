@@ -1,0 +1,25 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "assets/diary-uploads"
+public_folder: "assets/diary-uploads"
+
+collections:
+  - name: "diary"
+    label: "Diary"
+    folder: "_diary"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    format: "frontmatter"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Photo", name: "photo", widget: "image", required: false }
+      - { label: "Photo description (for accessibility)", name: "photo_alt", widget: "string", required: false }
+      - label: "Photo side"
+        name: "photo_side"
+        widget: "select"
+        options: ["left", "right"]
+        default: "right"
+      - { label: "Entry", name: "body", widget: "markdown" }

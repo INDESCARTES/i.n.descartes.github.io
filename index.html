@@ -50,42 +50,47 @@
       <span>coming soon</span>
       <span class="banner-line"></span>
     </div>
-    <div class="stage-wrapper-thick">
-      <div class="arch-glow"></div>
-      <div class="th-stage">
-        <div class="scene-wrap">
-          <div class="scene">
-            <div class="book">
-              <div class="face front"></div>
-              <div class="face back"></div>
-              <div class="face spine"></div>
-              <div class="face pages"></div>
-            </div>
-          </div>
-          <div class="ground-shadow"></div>
+    <div class="stage-wrapper-v3-thick">
+
+  <div class="arch-glow"></div>
+
+  <div class="th-stage">
+    <div class="scene-wrap">
+      <div class="scene">
+        <div class="book">
+          <div class="face front"></div>
+          <div class="face back"></div>
+          <div class="face spine"></div>
+          <div class="face pages"></div>
         </div>
       </div>
+      <div class="ground-shadow"></div>
     </div>
+  </div>
+
+</div>
   </section>
 
   <hr class="rule">
 
   <section class="novel fade-in">
-    <div class="stage-wrapper-mini">
-      <div class="th-stage">
-        <div class="scene-wrap">
-          <div class="scene">
-            <div class="book">
-              <div class="face front"></div>
-              <div class="face back"></div>
-              <div class="face spine"></div>
-              <div class="face pages"></div>
-            </div>
-          </div>
-          <div class="ground-shadow"></div>
+    <div class="stage-wrapper-v3-mini">
+
+  <div class="th-stage">
+    <div class="scene-wrap">
+      <div class="scene">
+        <div class="book">
+          <div class="face front"></div>
+          <div class="face back"></div>
+          <div class="face spine"></div>
+          <div class="face pages"></div>
         </div>
       </div>
+      <div class="ground-shadow"></div>
     </div>
+  </div>
+
+</div>
     <div>
       <h2>tuft hunter</h2>
       <p>A new adult horror that takes a lot of inspiration from books like <em>The Secret History</em>. It features messy love triangles, age gap romance, and academic obsession gone wrong.</p>
@@ -122,5 +127,17 @@
 </footer>
 
 <script src="script.js"></script>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", function (user) {
+      if (!user) {
+        window.netlifyIdentity.on("login", function () {
+          document.location.href = "/admin/";
+        });
+      }
+    });
+  }
+</script>
 </body>
 </html>
