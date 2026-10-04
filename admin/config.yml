@@ -1,22 +1,29 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: INDESCARTES/i.n.descartes.github.io
   branch: main
+  auth_methods: [token]   # sign in with a GitHub token only
 
+# Where uploaded photos are saved in the repo, and the path written into each entry.
+# (No leading slash on purpose: the site lives in a sub-folder on GitHub Pages.)
 media_folder: "assets/diary-uploads"
 public_folder: "assets/diary-uploads"
 
 collections:
   - name: "diary"
     label: "Diary"
+    label_singular: "Diary entry"
     folder: "_diary"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     format: "frontmatter"
+    summary: "{{date}} — {{title}}"
+    sortable_fields: ["date", "title"]
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
-      - { label: "Photo", name: "photo", widget: "image", required: false }
-      - { label: "Photo description (for accessibility)", name: "photo_alt", widget: "string", required: false }
+      - { label: "Date", name: "date", widget: "datetime", type: "date", default: "{{now}}" }
+      - { label: "Photo (optional)", name: "photo", widget: "image", required: false }
+      - { label: "Photo description (for screen readers)", name: "photo_alt", widget: "string", required: false }
       - label: "Photo side"
         name: "photo_side"
         widget: "select"
