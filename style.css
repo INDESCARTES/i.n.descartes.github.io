@@ -795,6 +795,8 @@ button:active, .btn:active {
   filter: drop-shadow(0 6px 6px rgba(0,0,0,0.4));
 }
 .shelf-book .ground-shadow { display: none; }
+.shelf-book .th-stage { padding: 0; gap: 0; }
+.shelf-book { min-height: 0; }
 .shelf-book .book {
   animation: none;
   transform: rotateY(90deg);
