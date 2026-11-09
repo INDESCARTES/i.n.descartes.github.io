@@ -24,6 +24,19 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--room);color:var(--ink);font-family:"EB Garamond",Garamond,Georgia,serif;font-size:21px;line-height:1.7}
 
+  /* ================= SITE MENU (same as your other pages, dark version) ================= */
+  .site-nav{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding:2rem clamp(1.5rem,6vw,4rem);border-bottom:2px solid var(--hairline);flex-wrap:wrap;background:var(--room)}
+  .site-nav .brand{font-family:"Bodoni Moda",Didot,serif;font-weight:900;font-style:italic;font-size:2rem;color:var(--pink);text-decoration:none}
+  .site-nav ul{list-style:none;display:flex;flex-wrap:wrap;gap:.75rem 2.25rem;margin:0;padding:0}
+  .site-nav a{color:var(--ink);font-family:Montserrat,sans-serif;font-size:.95rem;font-weight:500;letter-spacing:.03em;text-decoration:none}
+  .site-nav a:hover,.site-nav a[aria-current="page"]{color:var(--link)}
+  .site-nav a:focus-visible{outline:2px solid var(--pink);outline-offset:4px}
+  .site-nav .socials{display:flex;align-items:center;gap:1.75rem;flex-wrap:wrap}
+  .site-nav .instagram{display:inline-flex;align-items:center}
+  .site-nav .instagram svg{width:20px;height:20px;color:var(--ink);transition:color .2s}
+  .site-nav .instagram:hover svg{color:var(--link)}
+  @media (max-width:560px){.site-nav{padding:1.4rem 16px}.site-nav ul{gap:.6rem 1.4rem}}
+
   /* ================= RUNNER BANNER ================= */
   .runner{background:var(--burgundy);color:var(--pink);overflow:hidden;white-space:nowrap;padding:14px 0}
   .runner-track{display:inline-block;animation:run 40s linear infinite;font-family:"Bodoni Moda",Didot,serif;font-style:italic;font-weight:700;font-size:24px;letter-spacing:.03em}
@@ -108,6 +121,21 @@
 </head>
 <body>
 <div class="dimmer" aria-hidden="true"></div>
+<nav class="site-nav">
+  <a class="brand" href="index.html">I.N. Descartes</a>
+  <div class="socials">
+    <ul>
+      <li><a href="about.html">About</a></li>
+      <li><a href="novels.html">Novels</a></li>
+      <li><a href="diary.html">Diary</a></li>
+      <li><a href="stories.html" aria-current="page">Stories</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a class="instagram" href="https://www.instagram.com/imani_thee_writer/" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg>
+    </a>
+  </div>
+</nav>
 <div class="runner" aria-hidden="true"><span class="runner-track" id="runner"></span></div>
 
 <main>
@@ -174,28 +202,72 @@ const titleFromFile = n => n.replace(AUDIO_TYPES, "").replace(/^\d+[\s._-]*/, ""
 
 async function loadStories() {
   if (window.PREVIEW_STORIES) return window.PREVIEW_STORIES;
-  const key = "descartes-stories-v1";
-  try { const c = sessionStorage.getItem(key); if (c) return JSON.parse(c); } catch (e) {}
   try {
-    const res = await fetch(`https://api.github.com/repos/${SETTINGS.githubUser}/${SETTINGS.repo}/contents/${SETTINGS.folder}`);
+    const res = await fetch(`https://api.github.com/repos/${SETTINGS.githubUser}/${SETTINGS.repo}/contents/${SETTINGS.folder}`, { cache: "no-store" });
     if (!res.ok) throw new Error(res.status);
-    const names = (await res.json()).map(f => f.name);
-    const audioFiles = names.filter(n => AUDIO_TYPES.test(n)).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-    const stories = await Promise.all(audioFiles.map(async name => {
+    const files = await res.json();
+    const byName = Object.fromEntries(files.map(f => [f.name, f]));
+    const audioFiles = files.map(f => f.name).filter(n => AUDIO_TYPES.test(n)).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+    return await Promise.all(audioFiles.map(async name => {
       const base = name.replace(AUDIO_TYPES, "");
-      const s = { title: titleFromFile(name), file: `${SETTINGS.folder}/${encodeURIComponent(name)}`, blurb: "" };
-      if (names.includes(base + ".txt")) {
+      // "raw" is GitHub's direct copy of the file, available the moment it's uploaded,
+      // used as a backup while the website itself is still publishing a new tape
+      const s = { title: titleFromFile(name), file: `${SETTINGS.folder}/${encodeURIComponent(name)}`, raw: byName[name].download_url, blurb: "" };
+      const txt = byName[base + ".txt"];
+      if (txt && txt.download_url) {
         try {
-          const lines = (await (await fetch(`${SETTINGS.folder}/${encodeURIComponent(base + ".txt")}`)).text()).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
-          if (lines[0]) s.title = lines[0];
-          s.blurb = lines.slice(1).join(" ");
+          const r = await fetch(txt.download_url, { cache: "no-store" });
+          const body = r.ok ? await r.text() : "";
+          if (body && !/^\s*</.test(body)) {
+            const lines = body.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+            if (lines[0]) s.title = lines[0];
+            s.blurb = lines.slice(1).join(" ");
+          }
         } catch (e) {}
       }
       return s;
     }));
-    try { sessionStorage.setItem(key, JSON.stringify(stories)); } catch (e) {}
-    return stories;
   } catch (e) { return BACKUP_STORIES; }
+}
+
+/* ===================================================================
+   TAPE RECORDER SOUND EFFECTS
+   One small file (assets/tape-sfx.wav) holds every sound. Turn the two
+   volumes below up or down (0 = silent, 1 = full).
+   =================================================================== */
+const SFX = {
+  file: "assets/tape-sfx.wav",
+  effects: 0.8,     // key clicks, cassette going in, stop/eject clunk
+  tapeHiss: 0.55,   // the tape rolling underneath a story while it plays
+  sprite: { insert: [0, 0.61], click: [0.86, 1.04], stop: [1.29, 1.97], loop: [2.22, 5.27] },
+};
+let actx = null, sfxBuf = null, hiss = null, hissGain = null;
+(function loadSfx() {   // load the sounds with the page, so the very first key press clicks
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+  actx = new AC();
+  fetch(SFX.file).then(r => r.arrayBuffer()).then(b => actx.decodeAudioData(b)).then(buf => { sfxBuf = buf; if (isPlaying) startHiss(); }).catch(() => {});
+})();
+function unlockAudio() { if (actx && actx.state === "suspended") actx.resume(); }   // browsers only allow sound after a click or key press
+addEventListener("pointerdown", unlockAudio, { capture: true });
+addEventListener("keydown", unlockAudio, { capture: true });
+function sfx(name, vol = 1, rate = 1, length) {
+  if (!actx || !sfxBuf || actx.state === "closed") return;
+  const [s, e] = SFX.sprite[name], src = actx.createBufferSource(), g = actx.createGain();
+  src.buffer = sfxBuf; src.playbackRate.value = rate; g.gain.value = SFX.effects * vol;
+  src.connect(g).connect(actx.destination); src.start(0, s, length ?? e - s);
+}
+function startHiss() {
+  if (!actx || !sfxBuf || hiss || SFX.tapeHiss <= 0) return;
+  const [s, e] = SFX.sprite.loop, now = actx.currentTime;
+  hiss = actx.createBufferSource(); hissGain = actx.createGain();
+  hiss.buffer = sfxBuf; hiss.loop = true; hiss.loopStart = s; hiss.loopEnd = e;
+  hissGain.gain.setValueAtTime(0, now); hissGain.gain.linearRampToValueAtTime(SFX.tapeHiss, now + 0.4);
+  hiss.connect(hissGain).connect(actx.destination); hiss.start(0, s);
+}
+function stopHiss() {
+  if (!hiss) return;
+  const h = hiss, g = hissGain, now = actx.currentTime; hiss = null;
+  g.gain.cancelScheduledValues(now); g.gain.setValueAtTime(g.gain.value, now); g.gain.linearRampToValueAtTime(0, now + 0.25); h.stop(now + 0.3);
 }
 
 /* ===================================================================
@@ -408,10 +480,12 @@ async function initDeck() {
   const tween = (obj, k, to, dur) => new Promise(res => tweens.push({ obj, k, from: obj[k], to, dur: reduceMotion ? 0.01 : dur, t: 0, res }));
   let tape = null, chain = Promise.resolve(), ejected = false;
   async function doInsert(color, title) {
+    if (!ejected) sfx("stop", 0.6);
     await tween(lid.rotation, "x", -0.9, 0.45);
     if (tape) { const old = tape; await tween(old.position, "y", 10, 0.4); rig.remove(old); }
     tape = makeCassette(color, title); tape.position.set(-5.6, 10, 0.1); rig.add(tape);
     await tween(tape.position, "y", 2.47, 0.55);
+    sfx("insert");
     await tween(lid.rotation, "x", 0, 0.4);
     ejected = false;
   }
@@ -423,6 +497,7 @@ async function initDeck() {
   }
   async function doClose() {
     if (tape) { tween(tape.rotation, "x", 0, 0.3); await tween(tape.position, "y", 2.47, 0.3); }
+    sfx("insert", 0.8);
     await tween(lid.rotation, "x", 0, 0.4);
     ejected = false;
   }
@@ -440,7 +515,7 @@ async function initDeck() {
   renderer.domElement.addEventListener("pointermove", e => { el.style.cursor = pick(e) ? "pointer" : "default"; });
   renderer.domElement.addEventListener("click", e => {
     const hit = pick(e); if (!hit) return;
-    if (lidParts.includes(hit.object)) { chain = chain.then(async () => { await tween(lid.rotation, "x", -0.9, 0.45); await new Promise(r => setTimeout(r, 900)); await tween(lid.rotation, "x", 0, 0.4); }); return; }
+    if (lidParts.includes(hit.object)) { sfx("click", 0.7); chain = chain.then(async () => { await tween(lid.rotation, "x", -0.9, 0.45); await new Promise(r => setTimeout(r, 900)); await tween(lid.rotation, "x", 0, 0.4); }); return; }
     let o = hit.object; while (o && !o.userData.action) o = o.parent;
     if (!o) return;
     o.userData.tap = 0.25; keyAction(o.userData.action);
@@ -492,7 +567,7 @@ function tapeSVG(color, back) {
 }
 
 /* ================= page wiring ================= */
-let STORIES = [], current = 0;
+let STORIES = [], current = 0, wantPlay = false;
 const fmt = s => (!isFinite(s) ? "0:00" : Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0"));
 function setRunner(title) { const g = '<span class="glyph">𓇢𓆸</span>'; $("runner").innerHTML = `now playing: ${title.replace(/[<>&]/g, "")} ${g} the descartes library ${g} `.repeat(6); }
 
@@ -504,12 +579,15 @@ function load(i, autoplay) {
   setRunner(s.title); deck.insert(colorFor(i), s.title);
   document.querySelectorAll(".tape").forEach((el, n) => el.setAttribute("aria-current", n === i ? "true" : "false"));
   if ("mediaSession" in navigator) navigator.mediaSession.metadata = new MediaMetadata({ title: s.title, artist: "I.N. Descartes", album: "The Descartes Library" });
+  wantPlay = !!autoplay;
   if (autoplay) audio.play().catch(() => {});
 }
 
 function keyAction(a) {
+  sfx(a === "eject" ? "stop" : "click");
+  if (a === "rew" || a === "ff") sfx("loop", 0.9, a === "rew" ? 2.2 : 2.8, 1.4);   // quick tape-winding whir
   if (!STORIES.length) return;
-  if (a === "play") { if (deck.isEjected()) deck.close(); audio.play().catch(() => {}); }
+  if (a === "play") { wantPlay = true; if (deck.isEjected()) deck.close(); audio.play().catch(() => {}); }
   if (a === "pause") audio.pause();
   if (a === "eject") { audio.pause(); audio.currentTime = 0; deck.eject(); }
   if (a === "rew") { audio.currentTime = Math.max(0, audio.currentTime - 15); fastSpin = 0.5; fastDir = -1; }
@@ -554,12 +632,17 @@ $("deck").addEventListener("keydown", e => {
   const a = map[e.key]; if (!a) return; e.preventDefault(); deck.tap(a); keyAction(a);
 });
 $("seek").addEventListener("input", () => { if (audio.duration) audio.currentTime = $("seek").value / 100 * audio.duration; });
-audio.addEventListener("play", () => { isPlaying = true; });
-audio.addEventListener("pause", () => { isPlaying = false; });
-audio.addEventListener("ended", () => { isPlaying = false; });
+audio.addEventListener("play", () => { isPlaying = true; startHiss(); });
+audio.addEventListener("pause", () => { isPlaying = false; stopHiss(); });
+audio.addEventListener("ended", () => { isPlaying = false; stopHiss(); sfx("stop", 0.7); });
 audio.addEventListener("loadedmetadata", () => { $("dur").textContent = fmt(audio.duration); });
 audio.addEventListener("timeupdate", () => { $("cur").textContent = fmt(audio.currentTime); if (audio.duration) $("seek").value = audio.currentTime / audio.duration * 100; });
-audio.addEventListener("error", () => { if (STORIES[current]) $("error").textContent = `Can't play "${decodeURIComponent(STORIES[current].file)}". Check the file finished uploading.`; });
+audio.addEventListener("error", () => {
+  const s = STORIES[current]; if (!s) return;
+  // a brand-new tape may not be published on the website yet: try GitHub's direct copy instead
+  if (s.raw && audio.src !== s.raw) { const resume = !audio.paused || wantPlay; audio.src = s.raw; if (resume) audio.play().catch(() => {}); return; }
+  $("error").textContent = `This tape isn't ready yet. If it was just uploaded, give it a minute and refresh.`;
+});
 
 setRunner("the listening room");
 await initDeck();
