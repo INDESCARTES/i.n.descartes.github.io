@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Tape Terminal | The Descartes Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=EB+Garamond&family=Montserrat:wght@500;600&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --burgundy:#5c1a24; --red:#8e2a3b; --pink:#f3d7dc; --sage:#a9bf95; --crimson:#d33043;
+    --room:#140d0b; --raised:#261b18; --hairline:#4a3235; --ink:#f4eadb; --ink-muted:#c7b3a8; --link:#eba3af;
+    --typed:"Special Elite","Courier New",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(ellipse at 50% 0%,#2a1712 0%,var(--room) 60%);background-color:var(--room);min-height:100vh;color:var(--ink);font-family:"EB Garamond",Garamond,Georgia,serif;font-size:20px;line-height:1.6}
+  main{max-width:860px;margin:0 auto;padding:56px 24px 80px}
+  h1{font-family:"Bodoni Moda",Didot,serif;font-weight:400;font-size:clamp(40px,6vw,60px);line-height:1.05;margin:0;color:var(--pink);text-align:center}
+  .lede{font-family:Montserrat,Arial,sans-serif;font-weight:500;font-size:17px;color:var(--link);text-align:center;margin:10px auto 36px;max-width:560px;line-height:1.5}
+
+  .terminal{background:var(--raised);border:2px solid var(--hairline);border-radius:6px;overflow:hidden}
+  .bar{display:flex;align-items:center;gap:10px;padding:12px 18px;background:#1d1411;border-bottom:2px solid var(--hairline);font-family:var(--typed);font-size:16px;color:var(--ink-muted)}
+  .dot{width:12px;height:12px;border-radius:50%;background:var(--hairline)} .dot.on{background:var(--sage)}
+  .section{padding:24px 26px;border-bottom:1px solid var(--hairline)}
+  .section:last-child{border-bottom:0}
+  .step{font-family:Montserrat,sans-serif;font-weight:600;font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--link);margin:0 0 12px}
+  label{display:block;font-family:Montserrat,sans-serif;font-weight:500;font-size:15px;color:var(--ink-muted);margin:16px 0 6px}
+  input[type=text],input[type=password],textarea{width:100%;background:#120c0a;border:2px solid var(--hairline);border-radius:4px;color:var(--ink);font-family:var(--typed);font-size:18px;padding:12px 14px}
+  textarea{min-height:96px;resize:vertical;line-height:1.4}
+  input:focus,textarea:focus{outline:none;border-color:var(--link)}
+  .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
+  .btn{border:0;border-radius:999px;cursor:pointer;font-family:Montserrat,sans-serif;font-weight:600;color:#faf4ea;background:var(--burgundy);padding:16px 36px;font-size:18px;min-height:56px;transition:background .2s}
+  .btn:hover{background:var(--red)} .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--pink);outline-offset:3px}
+  .btn-quiet{background:var(--hairline);padding:12px 22px;font-size:15px;min-height:46px} .btn-quiet:hover{background:var(--red)}
+  .small{font-family:Montserrat,sans-serif;font-size:14px;color:var(--ink-muted);line-height:1.5;margin:10px 0 0}
+  .small a{color:var(--link)}
+  .counter{font-family:Montserrat,sans-serif;font-size:13px;color:var(--ink-muted);text-align:right;margin-top:4px}
+
+  .drop{display:flex;align-items:center;gap:22px;border:2px dashed var(--hairline);border-radius:6px;padding:22px;cursor:pointer;transition:border-color .2s,background .2s}
+  .drop:hover,.drop.over{border-color:var(--link);background:#2f211d}
+  .drop.loaded{border-style:solid;border-color:var(--sage)}
+  .drop svg{flex:none}
+  .drop-text{font-family:var(--typed);font-size:18px;color:var(--ink-muted)}
+  .drop-text strong{display:block;color:var(--ink);font-weight:400;font-size:20px}
+  #fileInput{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+  .log{background:#0c0807;border-radius:4px;padding:16px 18px;font-family:var(--typed);font-size:16px;line-height:1.6;color:var(--sage);min-height:120px;max-height:260px;overflow:auto;white-space:pre-wrap}
+  .log .err{color:var(--link)} .log .dim{color:var(--ink-muted)}
+  .shelf{list-style:none;padding:0;margin:0;font-family:var(--typed);font-size:17px;color:var(--ink-muted)}
+  .shelf li{padding:6px 0;border-bottom:1px dashed var(--hairline)}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<main>
+  <h1>Tape Terminal</h1>
+  <p class="lede">Drop in a recording, give it a title and a two-sentence description, and it becomes a new cassette in the Listening Room.</p>
+
+  <div class="terminal">
+    <div class="bar"><span class="dot" id="statusDot"></span><span id="statusText">not connected</span></div>
+
+    <!-- STEP 1: connect -->
+    <div class="section" id="connectSection">
+      <p class="step">1 · Connect to your website</p>
+      <label for="token">GitHub access key</label>
+      <input type="password" id="token" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
+      <div class="row">
+        <button class="btn" id="connectBtn" type="button">Connect</button>
+        <label style="margin:0;display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" id="remember" checked> remember on this device</label>
+      </div>
+      <p class="small">The key only lives in this browser. It is never put in your website's code. Need one? <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Make an access key on GitHub</a>.</p>
+    </div>
+
+    <!-- STEP 2: add a tape -->
+    <div class="section hidden" id="tapeSection">
+      <p class="step">2 · Add a tape</p>
+      <label class="drop" id="drop" for="fileInput">
+        <svg width="120" height="76" viewBox="0 0 240 150" aria-hidden="true">
+          <polygon id="tapeBody" points="8,0 232,0 240,8 240,142 232,150 8,150 0,142 0,8" fill="#4a3235"/>
+          <polygon points="22,12 218,12 226,20 226,64 218,72 22,72 14,64 14,20" fill="#f4eadb" opacity=".9"/>
+          <polygon points="72,82 168,82 176,90 176,112 168,120 72,120 64,112 64,90" fill="#0d0b0c"/>
+          <circle cx="94" cy="101" r="9" fill="#f4eadb"/><circle cx="146" cy="101" r="9" fill="#f4eadb"/>
+          <polygon points="52,128 188,128 198,150 42,150" fill="#000" opacity=".22"/>
+        </svg>
+        <span class="drop-text" id="dropText"><strong>Drop an audio file here</strong>or click to choose one (mp3 or m4a)</span>
+      </label>
+      <input type="file" id="fileInput" accept="audio/*,.mp3,.m4a,.wav,.ogg,.aac">
+
+      <label for="title">Title</label>
+      <input type="text" id="title" maxlength="80" placeholder="the title of your story">
+      <label for="desc">Description (two sentences)</label>
+      <textarea id="desc" maxlength="320" placeholder="First sentence. Second sentence."></textarea>
+      <div class="counter" id="descCount">0 / 320</div>
+
+      <div class="row">
+        <button class="btn" id="uploadBtn" type="button" disabled>Put it on the shelf</button>
+        <button class="btn btn-quiet" id="forgetBtn" type="button">Forget my key</button>
+      </div>
+    </div>
+
+    <!-- terminal output -->
+    <div class="section">
+      <p class="step">Terminal</p>
+      <div class="log" id="log" role="log" aria-live="polite"><span class="dim">&gt; waiting for an access key…</span></div>
+    </div>
+
+    <div class="section hidden" id="shelfSection">
+      <p class="step">Tapes on your shelf</p>
+      <ul class="shelf" id="shelf"></ul>
+    </div>
+  </div>
+</main>
+
+<script>
+/* Same repo the Listening Room reads from. */
+const SETTINGS = { githubUser: "INDESCARTES", repo: "i.n.descartes.github.io", folder: "audio", warnMB: 25 };
+const API = `https://api.github.com/repos/${SETTINGS.githubUser}/${SETTINGS.repo}`;
+const AUDIO_TYPES = /\.(mp3|m4a|wav|ogg|aac)$/i;
+const $ = id => document.getElementById(id);
+let token = "", branch = "main", existing = [], file = null;
+
+function log(msg, cls) {
+  const line = document.createElement("div"); line.textContent = "> " + msg; if (cls) line.className = cls;
+  $("log").appendChild(line); $("log").scrollTop = $("log").scrollHeight;
+}
+function setStatus(text, on) { $("statusText").textContent = text; $("statusDot").classList.toggle("on", !!on); }
+const gh = (path, opts = {}) => fetch(API + path, { ...opts, headers: { Accept: "application/vnd.github+json", Authorization: `Bearer ${token}`, ...(opts.headers || {}) } });
+const store = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} }, del: k => { try { localStorage.removeItem(k); } catch (e) {} } };
+
+async function connect() {
+  token = $("token").value.trim();
+  if (!token) { log("paste your access key first.", "err"); return; }
+  $("connectBtn").disabled = true; log("connecting to " + SETTINGS.repo + "…", "dim");
+  try {
+    const res = await gh("");
+    if (res.status === 401) throw new Error("GitHub didn't accept that key. Check you copied all of it, and that it hasn't expired.");
+    if (!res.ok) throw new Error("couldn't reach the repo (" + res.status + "). Check the key has access to " + SETTINGS.repo + ".");
+    const repo = await res.json(); branch = repo.default_branch || "main";
+    if (repo.permissions && !repo.permissions.push) throw new Error("the key can read the repo but can't add files. Give it Contents: Read and write.");
+    if ($("remember").checked) store.set("descartes-gh-key", token); else store.del("descartes-gh-key");
+    setStatus("connected to " + SETTINGS.repo, true); log("connected. ready for tapes.");
+    $("connectSection").classList.add("hidden"); $("tapeSection").classList.remove("hidden");
+    await refreshShelf();
+  } catch (e) { log(e.message, "err"); setStatus("not connected"); }
+  $("connectBtn").disabled = false;
+}
+
+async function refreshShelf() {
+  const res = await gh(`/contents/${SETTINGS.folder}?ref=${encodeURIComponent(branch)}`);
+  existing = res.ok ? (await res.json()).map(f => f.name) : [];
+  const tapes = existing.filter(n => AUDIO_TYPES.test(n)).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  $("shelf").innerHTML = "";
+  tapes.forEach(n => { const li = document.createElement("li"); li.textContent = n; $("shelf").appendChild(li); });
+  if (!tapes.length) { const li = document.createElement("li"); li.textContent = "no tapes yet. yours will be the first."; $("shelf").appendChild(li); }
+  $("shelfSection").classList.remove("hidden");
+}
+
+function pickFile(f) {
+  if (!f) return;
+  if (!AUDIO_TYPES.test(f.name)) { log(`"${f.name}" isn't an audio file I can use. Try an mp3 or m4a.`, "err"); return; }
+  file = f;
+  const mb = f.size / 1048576;
+  $("dropText").innerHTML = ""; const s = document.createElement("strong"); s.textContent = f.name; $("dropText").append(s, `${mb.toFixed(1)} MB · click to swap it`);
+  $("drop").classList.add("loaded"); $("tapeBody").setAttribute("fill", "#8e2a3b");
+  if (!$("title").value) $("title").value = f.name.replace(AUDIO_TYPES, "").replace(/^\d+[\s._-]*/, "").replace(/[-_]+/g, " ").trim();
+  log(`loaded ${f.name} (${mb.toFixed(1)} MB).`);
+  if (mb > SETTINGS.warnMB) log(`that's a big file. Over about ${SETTINGS.warnMB} MB the upload may fail. Exporting as mono MP3 at 96 kbps shrinks it a lot.`, "err");
+  updateButton();
+}
+const updateButton = () => { $("uploadBtn").disabled = !(file && $("title").value.trim()); };
+
+const slug = t => t.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "story";
+const nextNumber = () => { const nums = existing.map(n => parseInt(n, 10)).filter(n => !isNaN(n)); return String((nums.length ? Math.max(...nums) : 0) + 1).padStart(2, "0"); };
+const fileToBase64 = f => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(f); });
+const textToBase64 = s => { const bytes = new TextEncoder().encode(s); let bin = ""; bytes.forEach(b => (bin += String.fromCharCode(b))); return btoa(bin); };
+
+async function put(path, content, message) {
+  const res = await gh(`/contents/${path.split("/").map(encodeURIComponent).join("/")}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message, content, branch }) });
+  if (res.status === 422) throw new Error(`a file called ${path} already exists.`);
+  if (res.status === 413) throw new Error("GitHub said the file is too large. Try a smaller export (mono MP3, 96 kbps).");
+  if (!res.ok) throw new Error(`upload failed (${res.status}).`);
+}
+
+async function upload() {
+  const title = $("title").value.trim(), desc = $("desc").value.trim().replace(/\s+/g, " ");
+  if (!file || !title) return;
+  $("uploadBtn").disabled = true;
+  try {
+    await refreshShelf();
+    const ext = (file.name.match(AUDIO_TYPES) || [".mp3"])[0].toLowerCase();
+    const base = `${nextNumber()}-${slug(title)}`;
+    log(`reading ${file.name}…`, "dim");
+    const audio64 = await fileToBase64(file);
+    log(`uploading ${base}${ext}. Big files can take a minute, so keep this tab open…`, "dim");
+    await put(`${SETTINGS.folder}/${base}${ext}`, audio64, `Add tape: ${title}`);
+    log(`saving the label and description…`, "dim");
+    await put(`${SETTINGS.folder}/${base}.txt`, textToBase64(`${title}\n${desc}\n`), `Add description: ${title}`);
+    log(`done. "${title}" is on the shelf. It shows up in the Listening Room in about a minute (open the page in a new tab to see it).`);
+    file = null; $("title").value = ""; $("desc").value = ""; $("descCount").textContent = "0 / 320";
+    $("drop").classList.remove("loaded"); $("tapeBody").setAttribute("fill", "#4a3235");
+    $("dropText").innerHTML = "<strong>Drop another audio file here</strong>or click to choose one";
+    await refreshShelf();
+  } catch (e) { log(e.message, "err"); }
+  updateButton();
+}
+
+// drag and drop
+const drop = $("drop");
+["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => pickFile(e.dataTransfer.files[0]));
+$("fileInput").addEventListener("change", e => pickFile(e.target.files[0]));
+$("title").addEventListener("input", updateButton);
+$("desc").addEventListener("input", () => { $("descCount").textContent = `${$("desc").value.length} / 320`; });
+$("connectBtn").addEventListener("click", connect);
+$("token").addEventListener("keydown", e => { if (e.key === "Enter") connect(); });
+$("uploadBtn").addEventListener("click", upload);
+$("forgetBtn").addEventListener("click", () => { store.del("descartes-gh-key"); token = ""; $("token").value = ""; setStatus("not connected"); $("tapeSection").classList.add("hidden"); $("shelfSection").classList.add("hidden"); $("connectSection").classList.remove("hidden"); log("key forgotten on this device."); });
+
+const saved = store.get("descartes-gh-key");
+if (saved) { $("token").value = saved; connect(); }
+</script>
+</body>
+</html>
