@@ -150,10 +150,20 @@ async function connect() {
 
 async function refreshShelf() {
   const res = await gh(`/contents/${SETTINGS.folder}?ref=${encodeURIComponent(branch)}`);
-  existing = res.ok ? (await res.json()).map(f => f.name) : [];
+  const files = res.ok ? await res.json() : [];
+  existing = files.map(f => f.name);
+  const byName = Object.fromEntries(files.map(f => [f.name, f]));
   const tapes = existing.filter(n => AUDIO_TYPES.test(n)).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+  // show each tape's real title (first line of its description file), not the file name
+  const titles = await Promise.all(tapes.map(async n => {
+    const txt = byName[n.replace(AUDIO_TYPES, "") + ".txt"];
+    if (txt && txt.download_url) {
+      try { const r = await fetch(txt.download_url, { cache: "no-store" }); const line = r.ok ? (await r.text()).split(/\r?\n/)[0].trim() : ""; if (line && !line.startsWith("<")) return line; } catch (e) {}
+    }
+    return n.replace(AUDIO_TYPES, "").replace(/^\d+[\s._-]*/, "").replace(/[-_]+/g, " ");
+  }));
   $("shelf").innerHTML = "";
-  tapes.forEach(n => { const li = document.createElement("li"); li.textContent = n; $("shelf").appendChild(li); });
+  tapes.forEach((n, i) => { const li = document.createElement("li"); li.textContent = `${String(parseInt(n, 10) || i + 1).padStart(2, "0")} · ${titles[i]}`; $("shelf").appendChild(li); });
   if (!tapes.length) { const li = document.createElement("li"); li.textContent = "no tapes yet. yours will be the first."; $("shelf").appendChild(li); }
   $("shelfSection").classList.remove("hidden");
 }
@@ -172,7 +182,8 @@ function pickFile(f) {
 }
 const updateButton = () => { $("uploadBtn").disabled = !(file && $("title").value.trim()); };
 
-const slug = t => t.toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40) || "story";
+// keeps the title as you typed it (capitals, spaces, apostrophes); only drops characters a file name can't contain
+const fileName = t => t.normalize("NFC").replace(/[\/\\:*?"<>|#%{}^~\[\]`]/g, "").replace(/\s+/g, " ").trim().slice(0, 60) || "Story";
 const nextNumber = () => { const nums = existing.map(n => parseInt(n, 10)).filter(n => !isNaN(n)); return String((nums.length ? Math.max(...nums) : 0) + 1).padStart(2, "0"); };
 const fileToBase64 = f => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(f); });
 const textToBase64 = s => { const bytes = new TextEncoder().encode(s); let bin = ""; bytes.forEach(b => (bin += String.fromCharCode(b))); return btoa(bin); };
@@ -191,10 +202,10 @@ async function upload() {
   try {
     await refreshShelf();
     const ext = (file.name.match(AUDIO_TYPES) || [".mp3"])[0].toLowerCase();
-    const base = `${nextNumber()}-${slug(title)}`;
+    const base = `${nextNumber()} ${fileName(title)}`;
     log(`reading ${file.name}…`, "dim");
     const audio64 = await fileToBase64(file);
-    log(`uploading ${base}${ext}. Big files can take a minute, so keep this tab open…`, "dim");
+    log(`uploading "${title}". Big files can take a minute, so keep this tab open…`, "dim");
     await put(`${SETTINGS.folder}/${base}${ext}`, audio64, `Add tape: ${title}`);
     log(`saving the label and description…`, "dim");
     await put(`${SETTINGS.folder}/${base}.txt`, textToBase64(`${title}\n${desc}\n`), `Add description: ${title}`);
