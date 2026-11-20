@@ -6,7 +6,7 @@
 <title>Listening Room | The Descartes Library</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400;1,700&family=EB+Garamond:ital@0;1&family=Montserrat:wght@500;600&family=Special+Elite&family=Noto+Sans+Egyptian+Hieroglyphs&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Grenze+Gotisch:wght@500;700&family=Grenze:wght@600;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=EB+Garamond:ital@0;1&family=Special+Elite&family=Noto+Sans+Egyptian+Hieroglyphs&display=swap" rel="stylesheet">
 <script type="importmap">
 { "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
@@ -118,6 +118,76 @@
     .tape:hover .float,.tape:focus-visible .float{animation:none;transform:translateY(-22px) scale(1.12)}
   }
 </style>
+<style>
+  /* =====================================================================
+     ARCHIVE STYLE for the Listening Room (matches every other page).
+     The 3D recorder and tapes work exactly as before; only colors and fonts change.
+     ===================================================================== */
+  :root{
+    --oxblood:#6e1512; --void:#140d0a; --screen:#0d0806; --bone:#D7CFBE; --bezel-line:#8f8a80;
+    --blood:#c8322b; --coral:#e86a60; --mustard:#c9c56f;
+    --term:"VT323","Courier New",monospace; --gothic:"Grenze Gotisch","Cinzel Decorative",serif;
+    --tagfont:"Grenze","Cormorant Garamond",Georgia,serif;
+    --glow-term:0 0 1px rgba(201,197,111,.9),0 0 7px rgba(201,197,111,.55),0 0 16px rgba(201,197,111,.25);
+    --glow-coral:0 0 1px rgba(232,106,96,.9),0 0 7px rgba(232,106,96,.55),0 0 16px rgba(232,106,96,.25);
+    --glow-blood:0 0 2px rgba(200,50,43,.8),0 0 12px rgba(200,50,43,.45),0 0 28px rgba(200,50,43,.22);
+    --glow-bone:0 0 1px rgba(215,207,190,.8),0 0 8px rgba(215,207,190,.35);
+    --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .85 0 0 0 0 .82 0 0 0 0 .75 0 0 0 1.6 -.55'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+    --room:var(--void); --ink:var(--bone); --ink-muted:#a9a293; --link:var(--coral);
+  }
+  body{background:var(--void);color:var(--bone);font-family:"Cormorant Garamond","EB Garamond",Garamond,Georgia,serif;font-size:22px}
+  *{cursor:url('https://cdn.cursors-4u.net/previews/flower-62-f74da4a0-32.webp') 32 32,auto}
+  a,button,.tape,input[type=range]{cursor:url('https://cdn.cursors-4u.net/previews/flower-62-f74da4a0-32.webp') 32 32,pointer}
+
+  .site-nav{background:var(--oxblood);border-bottom:0;padding:1.6rem clamp(1.2rem,5vw,4rem)}
+  .site-nav .brand{font-family:var(--term);font-style:normal;font-weight:400;font-size:2.6rem;letter-spacing:.06em;line-height:1;text-transform:uppercase;color:var(--bone);white-space:nowrap;text-shadow:var(--glow-bone)}
+  @media (max-width:480px){.site-nav .brand{font-size:clamp(1.6rem,9vw,2.2rem)}}
+  .site-nav ul{gap:.4rem 2rem}
+  .site-nav a{font-family:var(--term);font-size:1.45rem;font-weight:400;letter-spacing:.04em;text-transform:uppercase;color:var(--bone);text-shadow:var(--glow-bone)}
+  .site-nav a:hover,.site-nav a[aria-current="page"]{color:var(--mustard);text-shadow:var(--glow-term)}
+  .site-nav ul a[aria-current="page"]::before{content:"> "}
+  .site-nav .instagram svg{width:24px;height:24px;color:var(--bone)}
+  .site-nav .instagram:hover svg{color:var(--mustard)}
+
+  .lace{box-sizing:content-box;height:120px;background:var(--void);border-block:4px solid var(--void);overflow:hidden}
+  .lace canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+
+  .runner{background:var(--screen);color:var(--bone);border-bottom:3px solid var(--bone);padding:.7rem 0}
+  .runner-track{font-family:var(--term);font-style:normal;font-weight:400;font-size:1.7rem;letter-spacing:.06em;text-transform:uppercase;text-shadow:var(--glow-bone)}
+  .glyph{color:var(--mustard);text-shadow:var(--glow-term)}
+
+  h1{font-family:var(--gothic);font-weight:500;color:var(--blood);font-size:clamp(3.2rem,8vw,6.2rem);line-height:.95;text-shadow:var(--glow-blood)}
+  .lede{font-family:inherit;font-size:1.35rem;color:var(--bone)}
+  .player{position:relative;isolation:isolate;overflow:hidden;background-color:var(--screen);background-image:repeating-linear-gradient(0deg,rgba(0,0,0,.3) 0 2px,transparent 2px 4px);border:12px solid var(--bone);border-radius:28px;padding:clamp(20px,3vw,32px);box-shadow:inset 0 0 0 3px var(--bezel-line),inset 0 0 70px rgba(0,0,0,.75),inset 0 0 26px rgba(201,197,111,.10)}
+  .player::before{content:"";position:absolute;inset:-60px;z-index:-1;pointer-events:none;background-image:var(--grain);background-size:180px 180px;opacity:.16;mix-blend-mode:screen;animation:grain .9s steps(6) infinite}
+  @keyframes grain{0%{transform:translate(0,0)}17%{transform:translate(-22px,14px)}33%{transform:translate(18px,-26px)}50%{transform:translate(-30px,-8px)}67%{transform:translate(26px,22px)}83%{transform:translate(-10px,30px)}100%{transform:translate(0,0)}}
+  .now{font-family:var(--term);font-weight:400;font-size:1.5rem;letter-spacing:.04em;color:var(--mustard);text-shadow:var(--glow-term)}
+  .now::before{content:"> ";color:var(--coral)}
+  .story-title{font-family:var(--gothic);font-weight:500;font-size:clamp(2.2rem,4vw,3.2rem);line-height:1;color:var(--blood);text-transform:none;text-shadow:var(--glow-blood)}
+  .progress{font-family:var(--term);font-size:1.4rem;color:var(--mustard);text-shadow:var(--glow-term)}
+  input[type=range]{accent-color:var(--mustard)}
+  .error{font-family:var(--term);font-size:1.2rem;color:var(--coral)}
+  .deck-hint{font-family:var(--term);font-size:1.15rem;color:var(--coral);text-transform:uppercase;text-shadow:var(--glow-coral)}
+
+  .btn{border-radius:0;background:var(--bone);color:var(--oxblood);font-family:var(--tagfont);font-weight:700;clip-path:polygon(.6em 0,calc(100% - .6em) 0,100% 50%,calc(100% - .6em) 100%,.6em 100%,0 50%)}
+  .btn:hover{background:var(--mustard)}
+  .arrow{width:72px}
+  .btn:focus-visible,.tape:focus-visible,input[type=range]:focus-visible{outline:3px solid var(--mustard)}
+
+  .shelf-title{font-family:var(--gothic);font-weight:500;color:var(--blood);font-size:clamp(2.6rem,5.5vw,4.4rem);text-shadow:var(--glow-blood)}
+  .shelf-sub,.empty{font-family:var(--term);font-size:1.2rem;color:var(--coral);text-transform:uppercase;text-shadow:var(--glow-coral)}
+  .carousel{scrollbar-color:var(--blood) transparent}
+  .tape-info{background:var(--screen);border:6px solid var(--bone);border-radius:16px;box-shadow:inset 0 0 0 2px var(--bezel-line);padding:16px 18px}
+  .tape-title{font-family:var(--gothic);font-weight:500;font-size:2rem;line-height:1;color:var(--blood);text-transform:none;text-shadow:var(--glow-blood)}
+  .tape-desc{font-size:1.1rem}
+  .tape-cta{font-family:var(--term);font-size:1.2rem;color:var(--mustard);text-transform:uppercase;text-shadow:var(--glow-term)}
+  .tape[aria-current="true"] .tape-info{border-color:var(--mustard)}
+
+  .signoff{font-family:var(--term);font-weight:400;font-size:1.4rem;color:var(--coral);text-transform:uppercase;text-shadow:var(--glow-coral)}
+  .st-foot{background:var(--oxblood);padding-bottom:28px}
+  .st-foot .runner{border-top:3px solid var(--bone)}
+  @media (prefers-reduced-motion:reduce){.player::before{animation:none}}
+</style>
 </head>
 <body>
 <div class="dimmer" aria-hidden="true"></div>
@@ -136,6 +206,7 @@
     </a>
   </div>
 </nav>
+<div class="lace" aria-hidden="true"></div>
 <div class="runner" aria-hidden="true"><span class="runner-track" id="runner"></span></div>
 
 <main>
@@ -170,6 +241,12 @@
   <p class="signoff">xoxo, descartes</p>
 </main>
 
+<footer class="st-foot">
+  <div class="lace" aria-hidden="true"></div>
+  <div class="runner" aria-hidden="true"><span class="runner-track" style="animation-duration:14s">join the library <span class="glyph">𓇢𓆸</span> join the library <span class="glyph">𓇢𓆸</span> join the library <span class="glyph">𓇢𓆸</span> join the library <span class="glyph">𓇢𓆸</span> join the library <span class="glyph">𓇢𓆸</span> join the library <span class="glyph">𓇢𓆸</span> join the library <span class="glyph">𓇢𓆸</span> join the library <span class="glyph">𓇢𓆸</span> join the library <span class="glyph">𓇢𓆸</span> join the library <span class="glyph">𓇢𓆸</span> join the library <span class="glyph">𓇢𓆸</span> join the library <span class="glyph">𓇢𓆸</span> </span></div>
+</footer>
+<script src="assets/archive/archive.js"></script>
+
 <script type="module">
 /* =====================================================================
    SETTINGS
@@ -181,7 +258,7 @@ const SETTINGS = {
   githubUser: "INDESCARTES",
   repo: "i.n.descartes.github.io",
   folder: "audio",
-  tapeColors: ["#5c1a24", "#8e2a3b", "#6d7b4f", "#4d364b", "#d33043", "#726756"],
+  tapeColors: ["#6e1512", "#c8322b", "#491b12", "#858248", "#2d2011", "#8494a1"],
 };
 /* Backup list, only used if GitHub can't be reached:
    { title: "Title", file: "audio/01-title.mp3", blurb: "Two sentences." },  */

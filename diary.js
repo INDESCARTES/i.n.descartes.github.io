@@ -20,21 +20,15 @@ const DIARY_BRANCH = "main";
     return { data, body: match[2] };
   }
 
-  function formatDate(dateStr) {
-    const d = new Date(dateStr + "T00:00:00");
-    if (isNaN(d)) return dateStr;
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    const yyyy = d.getFullYear();
-    return `${mm} / ${dd} / ${yyyy}`;
+  /* The CMS sometimes saves dates without quotes, which the reader turns
+     into a real date object. Either way, show it as YYYY-MM-DD. */
+  function isoDate(value) {
+    if (value instanceof Date && !isNaN(value)) return value.toISOString().slice(0, 10);
+    return String(value || "").slice(0, 10);
   }
 
   function slugify(text) {
     return text.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-  }
-
-  function ringDividerHTML() {
-    return `<div class="ring-divider"><img src="assets/binder-rings.png" alt="" aria-hidden="true"></div>`;
   }
 
   function renderMarkdown(text) {
@@ -43,24 +37,24 @@ const DIARY_BRANCH = "main";
     return window.marked(text || "");
   }
 
-  function entryHTML(entry) {
+  function escapeAttr(text) {
+    return String(text || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  }
+
+  /* Each entry is a CRT screen in the archive style */
+  function entryHTML(entry, number) {
     const { title, date, photo, photo_alt, photo_side } = entry.data;
-    const side = photo_side === "left" ? "float-left" : "float-right";
+    const side = photo_side === "left" ? "left" : "right";
     const bodyHtml = renderMarkdown(entry.body);
 
     const photoBlock = photo
-      ? `<div class="framed-photo ${side}">
-           <div class="photo-inner">
-             <img src="${photo}" alt="${photo_alt || ""}">
-           </div>
-           <img class="frame-img" src="assets/frame-gold.png" alt="">
-         </div>`
+      ? `<figure class="photo ${side}"><img src="${escapeAttr(photo)}" alt="${escapeAttr(photo_alt)}"></figure>`
       : "";
 
     return `
-    <article class="diary-entry fade-in" id="${slugify(title)}">
+    <article class="crt entry fade-in" id="${slugify(String(title || ""))}">
+      <div class="bar term"><span><span class="p">&gt;</span> log ${isoDate(date)}</span><span>entry ${String(number).padStart(3, "0")}</span></div>
       <h2>${title}</h2>
-      <span class="diary-date">${formatDate(date)}</span>
       ${photoBlock}
       ${bodyHtml}
       <p class="signoff">xoxo, descartes</p>
@@ -83,19 +77,19 @@ const DIARY_BRANCH = "main";
       );
     })
     .then((entries) => {
-      entries.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
+      entries.sort((a, b) => isoDate(b.data.date).localeCompare(isoDate(a.data.date)));
       if (entries.length === 0) {
-        container.innerHTML = `<p>No entries yet — check back soon.</p>`;
+        container.innerHTML = `<p class="loading">&gt; no entries yet. check back soon.</p>`;
         return;
       }
-      const pieces = entries.map((e) => entryHTML(e));
-      container.innerHTML = pieces.join(`\n${ringDividerHTML()}\n`);
+      const pieces = entries.map((e, i) => entryHTML(e, entries.length - i));
+      container.innerHTML = pieces.join("\n");
 
       // re-run fade-in observer for newly inserted content
       if (window.initFadeIn) window.initFadeIn();
     })
     .catch((err) => {
-      container.innerHTML = `<p>Couldn't load diary entries right now. (${err.message})</p>`;
+      container.innerHTML = `<p class="loading">&gt; couldn't open the log right now. (${err.message})</p>`;
       console.error(err);
     });
 })();

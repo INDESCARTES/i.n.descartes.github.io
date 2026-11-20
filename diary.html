@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diary — I.N. Descartes</title>
-<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/archive/archive.css">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 <body>
@@ -24,64 +26,37 @@
     </a>
   </div>
 </nav>
-
-<div class="ticker-wrap" aria-hidden="true">
-  <div class="ticker-track" style="animation-duration:13.7s;">
-    <div class="ticker-seq">
-      The Descartes Library <span>𓇢𓆸</span>
-      The Descartes Library <span>𓇢𓆸</span>
-      The Descartes Library <span>𓇢𓆸</span>
-      The Descartes Library <span>𓇢𓆸</span>
-    </div>
-    <div class="ticker-seq" aria-hidden="true">
-      The Descartes Library <span>𓇢𓆸</span>
-      The Descartes Library <span>𓇢𓆸</span>
-      The Descartes Library <span>𓇢𓆸</span>
-      The Descartes Library <span>𓇢𓆸</span>
-    </div>
-  </div>
-</div>
-
-<div class="scallop-divider" aria-hidden="true"></div>
+<div class="lace" aria-hidden="true"></div>
+<div class="ticker" aria-hidden="true"><span class="ticker-track">the writing desk log <span class="g">𓇢𓆸</span> the writing desk log <span class="g">𓇢𓆸</span> the writing desk log <span class="g">𓇢𓆸</span> the writing desk log <span class="g">𓇢𓆸</span> the writing desk log <span class="g">𓇢𓆸</span> the writing desk log <span class="g">𓇢𓆸</span> the writing desk log <span class="g">𓇢𓆸</span> the writing desk log <span class="g">𓇢𓆸</span> the writing desk log <span class="g">𓇢𓆸</span> the writing desk log <span class="g">𓇢𓆸</span> </span></div>
 
 <main>
-  <h1 class="page-title fade-in">Diary</h1>
-
-  <div id="diary-entries">
-    <p>Loading diary entries…</p>
+  <div class="page-head fade-in"><span class="tag">File 004</span><h1>Diary</h1></div>
+  <div id="diary-entries" style="display:flex;flex-direction:column;gap:48px">
+    <p class="loading">&gt; opening the log…<span class="cursor" aria-hidden="true"></span></p>
   </div>
 </main>
 
 <footer>
-  <div class="ticker-wrap footer-ticker" aria-hidden="true">
-    <div class="ticker-track" style="animation-duration:10.5s;">
-      <div class="ticker-seq">
-        join the library <span>𓇢𓆸</span>
-        join the library <span>𓇢𓆸</span>
-        join the library <span>𓇢𓆸</span>
-        join the library <span>𓇢𓆸</span>
-      </div>
-      <div class="ticker-seq" aria-hidden="true">
-        join the library <span>𓇢𓆸</span>
-        join the library <span>𓇢𓆸</span>
-        join the library <span>𓇢𓆸</span>
-        join the library <span>𓇢𓆸</span>
-      </div>
+  <div class="lace" aria-hidden="true"></div>
+  <div class="ticker" aria-hidden="true" style="border-top:3px solid var(--bone)"><span class="ticker-track" style="animation-duration:14s">join the library <span class="g">𓇢𓆸</span> join the library <span class="g">𓇢𓆸</span> join the library <span class="g">𓇢𓆸</span> join the library <span class="g">𓇢𓆸</span> join the library <span class="g">𓇢𓆸</span> join the library <span class="g">𓇢𓆸</span> join the library <span class="g">𓇢𓆸</span> join the library <span class="g">𓇢𓆸</span> join the library <span class="g">𓇢𓆸</span> join the library <span class="g">𓇢𓆸</span> join the library <span class="g">𓇢𓆸</span> join the library <span class="g">𓇢𓆸</span> </span></div>
+  <div class="foot">
+    <div class="crt">
+      <div class="term"><span class="p">&gt; subscribe --to archives</span></div>
+      <h2 style="margin-top:12px">Never miss an update</h2>
+      <form class="signup" action="#" method="post">
+        <label class="visually-hidden" for="signup-email">Email address</label>
+        <input type="email" id="signup-email" name="email" placeholder="&gt; your email_" required>
+        <button class="btn" type="submit">Sign up</button>
+      </form>
     </div>
-  </div>
-  <div class="footer-body">
-  <p>never miss an update</p>
-  <form class="signup" action="#" method="post">
-    <label class="visually-hidden" for="signup-email">Email address</label>
-    <input type="email" id="signup-email" name="email" placeholder="your email" required>
-    <button type="submit">Sign up</button>
-  </form>
+    <p class="signoff">xoxo, descartes</p>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
 <script src="script.js"></script>
+<script src="assets/archive/archive.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 <script src="diary.js"></script>
 </body>
 </html>
