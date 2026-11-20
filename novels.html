@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="assets/archive/archive.css">
+<link rel="stylesheet" href="assets/archive/shelf-original.css">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 <body>
@@ -31,31 +32,78 @@
 
 <main>
   <div class="page-head fade-in"><span class="tag">File 003</span><h1>Novels</h1></div>
-  <section class="crt fade-in">
-    <div class="bar term"><span><span class="p">&gt;</span> the stacks ── 2 records found</span><span>shelf a</span></div>
-    <div class="stacks">
-      <div class="shelf-row">
-        <button class="slot" type="button" aria-label="Pick up Tuft Hunter to take a closer look"
-                data-file="&gt; file 001 ── tuft hunter" data-title="Tuft Hunter"
-                data-summary="Agatha Aldridge is a micro influencer living out her dark academia dreams by enrolling as a freshman at Boston University. At orientation, she meets Portia Montgomery — Boston royalty, old money, and a streamer with over a million followers."><div class="book"><div class="face front"></div><div class="face back"></div><div class="face spine"></div><div class="face pages"></div></div></button>
-        <button class="slot" type="button" aria-label="Pick up the unknown book to take a closer look"
-                data-file="&gt; file 002 ── classified" data-title="Unknown"
-                data-summary="Small town slasher"><div class="book unk"><div class="face front">?</div><div class="face back">?</div><div class="face spine"><span>UNKNOWN</span></div><div class="face pages"></div></div></button>
+  <section class="fade-in">
+    <div class="shelf-display">
+      <div class="shelf-book stage-wrapper-v3-mini"
+           role="button" tabindex="0"
+           aria-label="Pick up Tuft Hunter to take a closer look"
+           data-title="tuft hunter"
+           data-summary="Agatha Aldridge is a micro influencer living out her dark academia dreams by enrolling as a freshman at Boston University. At orientation, she meets Portia Montgomery — Boston royalty, old money, and a streamer with over a million followers."
+           style="left:26%; --book-w:15cqw; --book-h:22cqw; --book-d:4.5cqw; min-height:0;">
+        <div class="th-stage">
+          <div class="scene-wrap">
+            <div class="scene">
+              <div class="book">
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face spine"></div>
+                <div class="face pages"></div>
+              </div>
+            </div>
+            <div class="ground-shadow"></div>
+          </div>
+        </div>
       </div>
-      <div class="plank"></div>
+
+      <div class="shelf-book book-placeholder stage-wrapper-v3-mini"
+           role="button" tabindex="0"
+           aria-label="Pick up the unknown book to take a closer look"
+           data-title="unknown"
+           data-summary="Small town slasher"
+           style="left:34%; --book-w:15cqw; --book-h:22cqw; --book-d:4.5cqw; min-height:0;">
+        <div class="th-stage">
+          <div class="scene-wrap">
+            <div class="scene">
+              <div class="book">
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face spine"></div>
+                <div class="face pages"></div>
+              </div>
+            </div>
+            <div class="ground-shadow"></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <p class="hint" style="margin-top:22px">&gt; Browse the Descartes library. Choose a book.<span class="cursor" aria-hidden="true"></span></p>
+
+    <p class="shelf-prompt">Browse the Descartes library. Choose a book.</p>
   </section>
 </main>
 
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lbTitle" aria-hidden="true">
-  <div class="crt">
-    <div class="stage" id="lbStage"></div>
-    <div>
-      <div class="term" id="lbFile"></div>
-      <h2 id="lbTitle" style="margin:8px 0 12px"></h2>
-      <p id="lbText" style="margin:0 0 22px"></p>
-      <button class="btn" type="button" id="lbClose">Close ✕</button>
+<div class="book-focus-overlay" id="bookFocusOverlay" aria-hidden="true">
+  <div class="book-focus-inner">
+    <button class="book-focus-close" id="bookFocusClose" aria-label="Put the book back">&times;</button>
+    <div class="stage-wrapper-v3-thick" id="bookFocusStage">
+      <div class="arch-glow"></div>
+      <div class="th-stage">
+        <div class="scene-wrap">
+          <div class="scene">
+            <div class="book">
+              <div class="face front"></div>
+              <div class="face back"></div>
+              <div class="face spine"></div>
+              <div class="face pages"></div>
+            </div>
+          </div>
+          <div class="ground-shadow"></div>
+        </div>
+      </div>
+    </div>
+    <div class="book-focus-text">
+      <span class="book-focus-title" id="bookFocusTitle"></span>
+      <p class="book-focus-summary" id="bookFocusSummary"></p>
+      <span class="status">Coming soon</span>
     </div>
   </div>
 </div>
